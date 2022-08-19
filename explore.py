@@ -32,13 +32,23 @@ def finance_explore():
     df = pd.DataFrame(data['{}.NS'.format(stock)]['prices'])
     df = df.drop('date', axis=1).set_index('formatted_date')
 
-    st.metric(label="high", value=df['high'][0], delta=(df['high'][0] - df['high'][1]))
-    st.metric(label="low", value=df['low'][0], delta=(df['low'][0] - df['low'][1]))
-    st.metric(label="volume", value=df['volume'][0], delta=(int(df['volume'][0] - df['volume'][1])))
+    daily = yahoo_financials.get_historical_price_data(start_date=str(d), 
+                                                  end_date=str(today), 
+                                                  time_interval='daily')
+
+    df_metrics = pd.DataFrame(daily['{}.NS'.format(stock)]['prices'])
+    df_metrics = df_metrics.drop('date', axis=1).set_index('formatted_date')
+
+    df_metrics = df_metrics.tail()
+    
+
+    st.metric(label="high", value=df_metrics['high'][4], delta=(df_metrics['high'][4] - df_metrics['high'][1]))
+    st.metric(label="low", value=df_metrics['low'][4], delta=(df_metrics['low'][4] - df_metrics['low'][1]))
+    st.metric(label="volume", value=df_metrics['volume'][4], delta=(int(df_metrics['volume'][4] - df_metrics['volume'][1])))
 
     if st.button('Show chart'):
 
-        fig = plt.figure(figsize=(70,100))
+        fig = plt.figure(figsize=(40,60))
         ax = sns.pointplot(df.index, df['close'],color = 'blue', label = "close")
         ax = sns.pointplot(df.index, df['open'],color = 'red', label = "open")
         ax = sns.pointplot(df.index, df['high'],color = 'green', label = "high")
