@@ -41,10 +41,10 @@ def finance_explore():
 
     df_metrics = df_metrics.tail()
     
-
-    st.metric(label="high", value=df_metrics['high'][4], delta=(df_metrics['high'][4] - df_metrics['high'][1]))
-    st.metric(label="low", value=df_metrics['low'][4], delta=(df_metrics['low'][4] - df_metrics['low'][1]))
-    st.metric(label="volume", value=df_metrics['volume'][4], delta=(int(df_metrics['volume'][4] - df_metrics['volume'][1])))
+    with st.sidebar:
+        st.metric(label="high", value=df_metrics['high'][4], delta=(df_metrics['high'][4] - df_metrics['high'][3]))
+        st.metric(label="low", value=df_metrics['low'][4], delta=(df_metrics['low'][4] - df_metrics['low'][3]))
+        st.metric(label="volume", value=df_metrics['volume'][4], delta=(int(df_metrics['volume'][4] - df_metrics['volume'][3])))
 
     if st.button('Show chart'):
 
