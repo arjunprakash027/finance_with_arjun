@@ -6,6 +6,7 @@ import numpy as np
 import datetime
 from datetime import date
 from yahoofinancials import YahooFinancials
+import altair as alt
 
 today = date.today()
 
@@ -49,6 +50,7 @@ def finance_explore():
     if st.button('Show chart'):
 
         fig = plt.figure(figsize=(40,60))
+        '''
         ax = sns.pointplot(df.index, df['close'],color = 'blue', label = "close")
         ax = sns.pointplot(df.index, df['open'],color = 'red', label = "open")
         ax = sns.pointplot(df.index, df['high'],color = 'green', label = "high")
@@ -59,6 +61,11 @@ def finance_explore():
         plt.title("tata motors stock price")      
         st.write("""### Historic trend of {} from {}""".format(stock,d))
         st.pyplot(fig)
+          '''
+
+        ex = df.drop('volume',axis=1)
+        ex = ex.drop('adjclose',axis=1)
+        st.line_chart(ex)
 
     if st.button("show more stats"):
         stats = yahoo_financials.get_key_statistics_data()
