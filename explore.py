@@ -32,19 +32,19 @@ def finance_explore():
     df = pd.DataFrame(data['{}.NS'.format(stock)]['prices'])
     df = df.drop('date', axis=1).set_index('formatted_date')
 
-    daily = yahoo_financials.get_historical_price_data(start_date=str(d), 
-                                                  end_date=str(today), 
-                                                  time_interval='daily')
+    price =  yahoo_financials.get_current_price()
+    revenue =  yahoo_financials.get_total_revenue()
+    profit = yahoo_financials.get_gross_profit()
+    fifty_ma = yahoo_financials.get_50day_moving_avg()
+    twohundred_ma = yahoo_financials.get_200day_moving_avg()
+    net_income = yahoo_financials.get_net_income()
 
-    df_metrics = pd.DataFrame(daily['{}.NS'.format(stock)]['prices'])
-    df_metrics = df_metrics.drop('date', axis=1).set_index('formatted_date')
-
-    df_metrics = df_metrics.tail()
-    
     with st.sidebar:
-        st.metric(label="high", value=df_metrics['high'][4], delta=(df_metrics['high'][4] - df_metrics['high'][3]))
-        st.metric(label="low", value=df_metrics['low'][4], delta=(df_metrics['low'][4] - df_metrics['low'][3]))
-        st.metric(label="volume", value=df_metrics['volume'][4], delta=(int(df_metrics['volume'][4] - df_metrics['volume'][3])))
+        st.metric(label="Current price of {}".format(stock), value=price)
+        st.metric(label="Current revenue of {}".format(stock), value=revenue)
+        st.metric(label="Current profit of {}".format(stock), value=profit)
+        st.metric(label="Current fifty day moving average of {}".format(stock), value=fifty_ma)
+        st.metric(label="Current 200 day moving average of {}".format(stock), value=twohundred_ma)
 
     if st.button('Show chart'):
 
@@ -59,4 +59,10 @@ def finance_explore():
         plt.title("tata motors stock price")      
         st.write("""### Historic trend of {} from {}""".format(stock,d))
         st.pyplot(fig)
+
+    if st.button("show more stats"):
+        stats = yahoo_financials.get_key_statistics_data()
+        with st.container():
+            for i in stats['{}.NS'.format(stock)]:
+                st.write(i,":",stats['{}.NS'.format(stock)][i])
                                          
